@@ -1,12 +1,14 @@
 package com.example.FinalProject.models.accounts;
 
 import com.example.FinalProject.models.users.AccountHolder;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 
@@ -23,37 +25,41 @@ public class SavingAccount extends Account{
     @Min(100)
     private BigDecimal minimumBalance;
     @DecimalMax("0.5")
+    @Column(columnDefinition = "decimal(38,4)")
     private BigDecimal interestRate;
+
+    private LocalDate lastInterestApplied = LocalDate.now();
 
 
     public SavingAccount() {
+        this.interestRate = new BigDecimal("0.0025",new MathContext(4));
+        this.status = Status.ACTIVE;
+        this.minimumBalance = BigDecimal.valueOf(1000D);
+        this.creationDate = LocalDate.now();
+    }
+
+    public SavingAccount(BigDecimal balance, AccountHolder primaryOwner, String secretKey) {
+        super(balance, primaryOwner);
+        this.secretKey = secretKey;
+        this.creationDate = LocalDate.now();
         this.interestRate = BigDecimal.valueOf(0.0025D);
         this.status = Status.ACTIVE;
         minimumBalance = BigDecimal.valueOf(1000D);
     }
 
-    public SavingAccount(BigDecimal balance, AccountHolder primaryOwner, String secretKey, LocalDate creationDate) {
+    public SavingAccount(BigDecimal balance, AccountHolder primaryOwner, String secretKey, BigDecimal minimumBalance , BigDecimal interestRate) {
         super(balance, primaryOwner);
         this.secretKey = secretKey;
-        this.creationDate = creationDate;
-        this.interestRate = BigDecimal.valueOf(0.0025D);
-        this.status = Status.ACTIVE;
-        minimumBalance = BigDecimal.valueOf(1000D);
-    }
-
-    public SavingAccount(BigDecimal balance, AccountHolder primaryOwner, String secretKey, LocalDate creationDate, BigDecimal minimumBalance , BigDecimal interestRate) {
-        super(balance, primaryOwner);
-        this.secretKey = secretKey;
-        this.creationDate = creationDate;
+        this.creationDate = LocalDate.now();
         this.minimumBalance = minimumBalance;
         this.interestRate = interestRate;
         this.status = Status.ACTIVE;
     }
 
-    public SavingAccount(BigDecimal balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey, LocalDate creationDate, BigDecimal minimumBalance, BigDecimal interestRate) {
+    public SavingAccount(BigDecimal balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey, BigDecimal minimumBalance, BigDecimal interestRate) {
         super(balance, primaryOwner, secondaryOwner);
         this.secretKey = secretKey;
-        this.creationDate = creationDate;
+        this.creationDate = LocalDate.now();
         this.minimumBalance = minimumBalance;
         this.interestRate = interestRate;
         this.status = Status.ACTIVE;
@@ -98,6 +104,14 @@ public class SavingAccount extends Account{
 
     public void setMinimumBalance(BigDecimal minimumBalance) {
         this.minimumBalance = minimumBalance;
+    }
+
+    public LocalDate getLastInterestApplied() {
+        return lastInterestApplied;
+    }
+
+    public void setLastInterestApplied(LocalDate lastInterestApplied) {
+        this.lastInterestApplied = lastInterestApplied;
     }
 
     @Override

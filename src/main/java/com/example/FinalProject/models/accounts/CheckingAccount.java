@@ -22,25 +22,28 @@ public class CheckingAccount extends Account{
     @Enumerated(value = EnumType.STRING)
     private Status status;
 
+    private LocalDate lastMonthlyMaintenanceFee = LocalDate.now();
+
     public CheckingAccount() {
         this.status = Status.ACTIVE;
         MINIMUM_BALANCE = BigDecimal.valueOf(250D);
         MONTHLY_MAINTENANCE_FEE = BigDecimal.valueOf(12D);
+        creationDate = LocalDate.now();
     }
 
-    public CheckingAccount(BigDecimal balance, AccountHolder primaryOwner, String secretKey, LocalDate creationDate) {
+    public CheckingAccount(BigDecimal balance, AccountHolder primaryOwner, String secretKey) {
         super(balance,primaryOwner);
         this.secretKey = secretKey;
-        this.creationDate = creationDate;
+        creationDate = LocalDate.now();
         this.status = Status.ACTIVE;
         MONTHLY_MAINTENANCE_FEE = BigDecimal.valueOf(12D);
         MINIMUM_BALANCE = BigDecimal.valueOf(250D);
     }
 
-    public CheckingAccount(BigDecimal balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey, LocalDate creationDate) {
+    public CheckingAccount(BigDecimal balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey) {
         super(balance, primaryOwner, secondaryOwner);
         this.secretKey = secretKey;
-        this.creationDate = creationDate;
+        creationDate = LocalDate.now();
         this.status = Status.ACTIVE;
         MONTHLY_MAINTENANCE_FEE = BigDecimal.valueOf(12D);
         MINIMUM_BALANCE = BigDecimal.valueOf(250D);
@@ -84,5 +87,13 @@ public class CheckingAccount extends Account{
             balance = balance.subtract(super.getPENALTY_FEE());
         }
         super.setBalance(balance);
+    }
+
+    public LocalDate getLastMonthlyMaintenanceFee() {
+        return lastMonthlyMaintenanceFee;
+    }
+
+    public void setLastMonthlyMaintenanceFee(LocalDate lastMonthlyMaintenanceFee) {
+        this.lastMonthlyMaintenanceFee = lastMonthlyMaintenanceFee;
     }
 }

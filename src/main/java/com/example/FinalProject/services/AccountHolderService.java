@@ -7,12 +7,15 @@ import com.example.FinalProject.models.users.Role;
 import com.example.FinalProject.repositories.accounts.*;
 import com.example.FinalProject.repositories.users.AccountHolderRepository;
 import com.example.FinalProject.repositories.users.RoleRepository;
+import org.aspectj.weaver.patterns.PerObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 
@@ -27,6 +30,12 @@ public class AccountHolderService {
     RoleRepository roleRepository;
     @Autowired
     TransactionRepository transactionRepository;
+    @Autowired
+    SavingAccountRepository savingAccountRepository;
+    @Autowired
+    CreditCardRepository creditCardRepository;
+    @Autowired
+    CheckingAccountRepository checkingAccountRepository;
 
     public AccountHolder createAccountHolder(AccountHolder accountHolder) {
         //Guarda el objeto accountholder en la BD que le pasamos como JSON
@@ -37,8 +46,8 @@ public class AccountHolderService {
 
     public List<Account> getListAccountsService(Long id) {
         //Recupero el accountHolder de la base de datos y compruebo que existe
-        AccountHolder accountHolder =  accountHolderRepository.findById(id)
-               .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "AccountHolder not found"));
+        AccountHolder accountHolder = accountHolderRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "AccountHolder not found"));
 
         //Devuelvo una lista de sus cuentas
         return accountHolder.getPrimaryAccounts();
@@ -46,14 +55,48 @@ public class AccountHolderService {
 
     public BigDecimal getBalance(Long id) {
         //Recupero el accountHolder de la base de datos y compruebo que existe
-        AccountHolder accountHolder =  accountHolderRepository.findById(id)
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "AccountHolder not found"));
+        AccountHolder accountHolder = accountHolderRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "AccountHolder not found"));
 
         BigDecimal balance = new BigDecimal("0.0");
+        BigDecimal newBalanceSavingAccount;
+        BigDecimal newBalanceCreditCard;
+
 
         //Recorro todas sus cuentas y voy sumando los balances
         for (Account primaryAccount : accountHolder.getPrimaryAccounts()) {
-                balance = balance.add(primaryAccount.getBalance());
+            //Si la cuenta es SavingAccount por cada año que pase le sumo el interestRate.
+            if (primaryAccount instanceof SavingAccount) {
+                SavingAccount savingAccount = (SavingAccount) primaryAccount;
+                if (Period.between(savingAccount.getLastInterestApplied(), LocalDate.now()).getYears() > 1) {
+                    newBalanceSavingAccount = savingAccount.getInterestRate().multiply(savingAccount.getBalance())
+                            .multiply(BigDecimal.valueOf(Period.between(savingAccount.getLastInterestApplied(), LocalDate.now()).getYears())).add(savingAccount.getBalance());
+                    savingAccount.setBalance(newBalanceSavingAccount);
+                    savingAccount.setLastInterestApplied(savingAccount.getLastInterestApplied().plusYears(Period.between(savingAccount.getLastInterestApplied(), LocalDate.now()).getYears()));
+                    savingAccountRepository.save(savingAccount);
+                }
+            }
+            //Si la cuenta es Credit Card por cada mes que pasa le resto el interestRate
+            if (primaryAccount instanceof CreditCard) {
+                CreditCard creditCard = (CreditCard) primaryAccount;
+                if (Period.between(creditCard.getLastInterestApplied(), LocalDate.now()).getMonths() > 1) {
+                    newBalanceCreditCard = creditCard.getBalance().subtract(creditCard.getInterestRate().multiply(creditCard.getBalance())
+                            .multiply(BigDecimal.valueOf(Period.between(creditCard.getLastInterestApplied(), LocalDate.now()).getMonths())).divide(BigDecimal.valueOf(12)));
+                    creditCard.setBalance(newBalanceCreditCard);
+                    creditCard.setLastInterestApplied(creditCard.getLastInterestApplied().plusYears(Period.between(creditCard.getLastInterestApplied(), LocalDate.now()).getYears()));
+                    creditCardRepository.save(creditCard);
+                }
+            }
+            //Si la cuenta es Checking por cada mes que pasa le descuento el MonthlyMaintenanceFee
+            if (primaryAccount instanceof CheckingAccount) {
+                CheckingAccount checkingAccount = (CheckingAccount) primaryAccount;
+                if (Period.between(checkingAccount.getLastMonthlyMaintenanceFee(), LocalDate.now()).getMonths() > 1) {
+                    checkingAccount.setBalance(checkingAccount.getBalance().subtract(checkingAccount.getMONTHLY_MAINTENANCE_FEE()));
+                    checkingAccount.setLastMonthlyMaintenanceFee(LocalDate.now());
+                    checkingAccountRepository.save(checkingAccount);
+                }
+            }
+            balance = balance.add(primaryAccount.getBalance());
         }
 
         return balance;
@@ -65,17 +108,18 @@ public class AccountHolderService {
 
         //Recupero la cuenta de la BD y compruebo que la cuenta existe
         Account senderAccount = accountRepository.findById(transactionDTO.getAccountSenderId())
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
 
         //Que la cuenta tiene fondos
-        if(senderAccount.getBalance().compareTo(transactionDTO.getAmount()) < 0) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The account has not enough founds");
+        if (senderAccount.getBalance().compareTo(transactionDTO.getAmount()) < 0)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The account has not enough founds");
 
         //Recupero la cuenta de la BD y compruebo que la cuenta de destino existe
         Account receiverAccount = accountRepository.findById(transactionDTO.getAccountReceiverId())
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
 
         //Compruebo que no le deje la cuenta en negativo (EN EL CASO DE QUE INTRODUZCA UN SIGNO NEGATIVO DELANTE DE LA CIFRA)
-        if(senderAccount.getBalance().subtract(transactionDTO.getAmount()).compareTo(BigDecimal.ZERO) == -1){
+        if (senderAccount.getBalance().subtract(transactionDTO.getAmount()).compareTo(BigDecimal.ZERO) == -1) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough founds on");
         }
 

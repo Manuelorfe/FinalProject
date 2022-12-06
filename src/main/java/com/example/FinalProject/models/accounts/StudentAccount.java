@@ -24,17 +24,17 @@ public class StudentAccount extends Account{
         this.status = Status.ACTIVE;
     }
 
-    public StudentAccount(BigDecimal balance, AccountHolder primaryOwner, String secretKey, LocalDate creatingDate) {
+    public StudentAccount(BigDecimal balance, AccountHolder primaryOwner, String secretKey) {
         super(balance, primaryOwner);
         this.secretKey = secretKey;
-        this.creatingDate = creatingDate;
+        this.creatingDate = LocalDate.now();
         this.status = Status.ACTIVE;
     }
 
-    public StudentAccount(BigDecimal balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey, LocalDate creatingDate) {
+    public StudentAccount(BigDecimal balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey) {
         super(balance, primaryOwner, secondaryOwner);
         this.secretKey = secretKey;
-        this.creatingDate = creatingDate;
+        this.creatingDate = LocalDate.now();
         this.status = Status.ACTIVE;
     }
 

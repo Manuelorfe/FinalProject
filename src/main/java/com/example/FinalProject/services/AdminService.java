@@ -98,13 +98,12 @@ public class AdminService {
         CheckingAccount checkingAccount = new CheckingAccount(
                 checkingStudentDTO.getBalance(),
                 accountHolderRepository.findById(checkingStudentDTO.getPrimaryOwnerId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "AccountHolder not found")),
-                checkingStudentDTO.getSecretKey(),
-                checkingStudentDTO.getCreationDate());
+                checkingStudentDTO.getSecretKey());
 
         long age = LocalDate.from(checkingAccount.getPrimaryOwner().getDateOfBirth())
                 .until(LocalDate.now(), ChronoUnit.YEARS);
 
-        if(age>18){
+        if(age>24){
             if(checkingAccount.getBalance().compareTo(checkingAccount.getMINIMUM_BALANCE()) == -1){
                 throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "The Balance must be greater than Minimum Balance");
             }
@@ -113,8 +112,7 @@ public class AdminService {
         StudentAccount studentAccount = new StudentAccount(
                 checkingStudentDTO.getBalance(),
                 accountHolderRepository.findById(checkingStudentDTO.getPrimaryOwnerId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "AccountHolder not found")),
-                checkingStudentDTO.getSecretKey(),
-                checkingStudentDTO.getCreationDate());
+                checkingStudentDTO.getSecretKey());
 
         return studentAccountRepository.save(studentAccount);
     }
@@ -124,7 +122,7 @@ public class AdminService {
 
         if(accountHolderRepository.findById(savingAccount.getPrimaryOwner().getId()).isPresent()){
 
-            if(savingAccount.getBalance().compareTo(savingAccount.getMinimumBalance()) == -1){
+            if(savingAccount.getBalance().compareTo(savingAccount.getMinimumBalance()) < 0){
                 throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "The Balance must be greater than Minimum Balance");
             }
             return savingAccountRepository.save(savingAccount);
