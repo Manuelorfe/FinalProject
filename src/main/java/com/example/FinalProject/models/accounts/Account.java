@@ -1,6 +1,7 @@
 package com.example.FinalProject.models.accounts;
 
 import com.example.FinalProject.models.users.AccountHolder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -26,8 +27,10 @@ public abstract class Account {
     @ManyToOne
     private AccountHolder secondaryOwner;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "accountSender", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     List<Transaction> listSenders = new ArrayList<>();
+    @JsonIgnore
     @OneToMany(mappedBy = "accountReceiver", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     List<Transaction> listReceivers = new ArrayList<>();
 

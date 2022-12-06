@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -19,6 +20,8 @@ public class FinalProjectApplication implements CommandLineRunner {
 	AdminRepository adminRepository;
 	@Autowired
 	RoleRepository roleRepository;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	public static void main(String[] args) {
 		SpringApplication.run(FinalProjectApplication.class, args);
@@ -28,9 +31,11 @@ public class FinalProjectApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		Admin admin = new Admin("AdminUser", "123456", "Manu");
+		Admin admin = new Admin("AdminUser", passwordEncoder.encode("123456"), "Manu");
 		adminRepository.save(admin);
 		roleRepository.save(new Role("ADMIN", admin));
+		roleRepository.save(new Role("ACCOUNTHOLDER", admin));
+		roleRepository.save(new Role("THIRDPARTY", admin));
 
 
 	}

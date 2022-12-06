@@ -10,6 +10,7 @@ import com.example.FinalProject.repositories.users.RoleRepository;
 import org.aspectj.weaver.patterns.PerObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -36,11 +37,15 @@ public class AccountHolderService {
     CreditCardRepository creditCardRepository;
     @Autowired
     CheckingAccountRepository checkingAccountRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public AccountHolder createAccountHolder(AccountHolder accountHolder) {
         //Guarda el objeto accountholder en la BD que le pasamos como JSON
+        accountHolder.setPassword(passwordEncoder.encode(accountHolder.getPassword()));
         AccountHolder accountHolder1 = accountHolderRepository.save(accountHolder);
         roleRepository.save(new Role("ACCOUNTHOLDER", accountHolder1));
+
         return accountHolder1;
     }
 

@@ -10,6 +10,7 @@ import com.example.FinalProject.repositories.users.ThirdPartyUserRepository;
 import com.example.FinalProject.repositories.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -39,10 +40,13 @@ public class AdminService {
     UserRepository userRepository;
     @Autowired
     RoleRepository roleRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     //todo: DTO para el PrimaryOwner de saving card y credit Card ?
 
     public ThirdPartyUser addThirdPartyUserService(ThirdPartyUser thirdPartyUser) {
+            thirdPartyUser.setPassword(passwordEncoder.encode(thirdPartyUser.getPassword()));
             ThirdPartyUser thirdPartyUser1 = thirdPartyUserRepository.save(thirdPartyUser);
             roleRepository.save(new Role("THIRDPARTY", thirdPartyUser1));
             return thirdPartyUser1;

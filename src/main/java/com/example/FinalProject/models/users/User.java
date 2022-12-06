@@ -18,8 +18,8 @@ public abstract class User {
     private String username;
     @NotNull
     private String password;
-    @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Role> roles = new HashSet<>();
 
     public User(String username, String password) {
