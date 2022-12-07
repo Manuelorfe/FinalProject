@@ -30,22 +30,24 @@ public class ThirdPartyService {
     ThirdPartyUserRepository thirdPartyUserRepository;
 
 
-    public Account makeThirdPartyTransference(ThirdPartyTransactionDTO thirdPartyTransactionDTO) {
+    public Account makeThirdPartyTransference(String hashedKey, ThirdPartyTransactionDTO thirdPartyTransactionDTO) {
 
         CheckingAccount checkingAccount;
         StudentAccount studentAccount;
         SavingAccount savingAccount;
 
+
         ThirdPartyUser thirdPartyUser = thirdPartyUserRepository.findById(thirdPartyTransactionDTO.getThirdPartyId())
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "ThirdParty not found"));
 
-        if(!thirdPartyUser.getHashedKey().equals(thirdPartyTransactionDTO.getHashedKey()))throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The HashedKey is not correct");
+        if(!hashedKey.equals(thirdPartyUser.getHashedKey())){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your HashedKey is incorrect");
+        }
 
         //Recupero la cuenta de la BD y compruebo que la cuenta existe
         Account accountReceiver = accountRepository.findById(thirdPartyTransactionDTO.getAccountId())
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
 
-        boolean b = accountReceiver instanceof CheckingAccount;
 
         if(accountReceiver instanceof CreditCard) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can't send money to a Credit Card");
         //Si es un tipo de cuenta Checking account

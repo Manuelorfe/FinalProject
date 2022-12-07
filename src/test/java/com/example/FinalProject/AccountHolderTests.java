@@ -5,6 +5,7 @@ import com.example.FinalProject.models.accounts.CheckingAccount;
 import com.example.FinalProject.models.accounts.SavingAccount;
 import com.example.FinalProject.models.users.AccountHolder;
 import com.example.FinalProject.models.users.Address;
+import com.example.FinalProject.models.users.Admin;
 import com.example.FinalProject.repositories.accounts.CheckingAccountRepository;
 import com.example.FinalProject.repositories.accounts.SavingAccountRepository;
 import com.example.FinalProject.repositories.accounts.TransactionRepository;
@@ -63,7 +64,7 @@ public class AccountHolderTests {
     @Test
     public void getMyAccounts() throws Exception {
 
-/*        Address address = new Address("Calle 1", "Barcelona", "08019", "España");
+   /*     Address address = new Address("Calle 1", "Barcelona", "08019", "España");
         AccountHolder accountHolder = accountHolderRepository.save(new AccountHolder("User", "123456", "Manuel", LocalDate.of(1985, 02, 17), address));
         CheckingAccount checkingAccount = checkingAccountRepository.save(new CheckingAccount(BigDecimal.valueOf(1000), accountHolder, "SKCHECKING"));
 
@@ -73,6 +74,7 @@ public class AccountHolderTests {
                 .andExpect(status().isOk()).andReturn();
 
         assertTrue(result.getResponse().getContentAsString().contains("SKCHECKING"));*/
+
     }
 
     @Test

@@ -1,15 +1,11 @@
 package com.example.FinalProject;
 
 import com.example.FinalProject.dtos.ThirdPartyTransactionDTO;
-import com.example.FinalProject.dtos.TransactionDTO;
 import com.example.FinalProject.models.accounts.CheckingAccount;
-import com.example.FinalProject.models.accounts.SavingAccount;
 import com.example.FinalProject.models.users.AccountHolder;
 import com.example.FinalProject.models.users.Address;
 import com.example.FinalProject.models.users.ThirdPartyUser;
 import com.example.FinalProject.repositories.accounts.CheckingAccountRepository;
-import com.example.FinalProject.repositories.accounts.SavingAccountRepository;
-import com.example.FinalProject.repositories.accounts.TransactionRepository;
 import com.example.FinalProject.repositories.users.AccountHolderRepository;
 import com.example.FinalProject.repositories.users.ThirdPartyUserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,7 +61,7 @@ public class ThirdPartyTest {
         AccountHolder accountHolder = accountHolderRepository.save(new AccountHolder("User", "123456", "Manuel", LocalDate.of(1985, 02, 17), address));
         CheckingAccount checkingAccount = checkingAccountRepository.save(new CheckingAccount(BigDecimal.valueOf(1000), accountHolder, "SKCHECKING"));
 
-        ThirdPartyTransactionDTO thirdPartyTransactionDTO = new ThirdPartyTransactionDTO(thirdPartyUser.getId(), thirdPartyUser.getHashedKey(),BigDecimal.valueOf(500), checkingAccount.getId(),checkingAccount.getSecretKey());
+        ThirdPartyTransactionDTO thirdPartyTransactionDTO = new ThirdPartyTransactionDTO(thirdPartyUser.getId(),BigDecimal.valueOf(500), checkingAccount.getId(),checkingAccount.getSecretKey());
 
         //Convertimos el objeto a formato json
         String body = objectMapper.writeValueAsString(thirdPartyTransactionDTO);

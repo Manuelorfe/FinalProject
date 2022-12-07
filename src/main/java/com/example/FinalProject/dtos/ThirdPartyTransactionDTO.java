@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 public class ThirdPartyTransactionDTO {
 
    private Long thirdPartyId;
-   private String hashedKey;
    private BigDecimal amount;
    private Long accountId;
    private String secretKey;
@@ -19,9 +18,8 @@ public class ThirdPartyTransactionDTO {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
    private LocalDateTime transactionDate = LocalDateTime.now();
 
-    public ThirdPartyTransactionDTO(Long thirdPartyId, String hashedKey, BigDecimal amount, Long accountId, String secretKey) {
+    public ThirdPartyTransactionDTO(Long thirdPartyId, BigDecimal amount, Long accountId, String secretKey) {
         this.thirdPartyId = thirdPartyId;
-        this.hashedKey = hashedKey;
         this.amount = amount;
         this.accountId = accountId;
         this.secretKey = secretKey;
@@ -44,14 +42,6 @@ public class ThirdPartyTransactionDTO {
     }
 
     public ThirdPartyTransactionDTO() {
-    }
-
-    public String getHashedKey() {
-        return hashedKey;
-    }
-
-    public void setHashedKey(String hashedKey) {
-        this.hashedKey = hashedKey;
     }
 
     public BigDecimal getAmount() {

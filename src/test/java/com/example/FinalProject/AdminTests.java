@@ -1,7 +1,6 @@
 package com.example.FinalProject;
 
 import com.example.FinalProject.dtos.CheckingStudentDTO;
-import com.example.FinalProject.models.accounts.CheckingAccount;
 import com.example.FinalProject.models.accounts.CreditCard;
 import com.example.FinalProject.models.accounts.SavingAccount;
 import com.example.FinalProject.models.users.AccountHolder;
@@ -11,7 +10,6 @@ import com.example.FinalProject.models.users.ThirdPartyUser;
 import com.example.FinalProject.repositories.accounts.CheckingAccountRepository;
 import com.example.FinalProject.repositories.accounts.CreditCardRepository;
 import com.example.FinalProject.repositories.accounts.SavingAccountRepository;
-import com.example.FinalProject.repositories.accounts.TransactionRepository;
 import com.example.FinalProject.repositories.users.AccountHolderRepository;
 import com.example.FinalProject.repositories.users.AdminRepository;
 import com.example.FinalProject.repositories.users.ThirdPartyUserRepository;
@@ -23,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
