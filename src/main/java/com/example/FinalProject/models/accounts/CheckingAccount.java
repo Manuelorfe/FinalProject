@@ -1,6 +1,10 @@
 package com.example.FinalProject.models.accounts;
 
 import com.example.FinalProject.models.users.AccountHolder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -18,10 +22,13 @@ public class CheckingAccount extends Account{
     @NotNull
     private String secretKey;
     @NotNull
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate creationDate;
     @Enumerated(value = EnumType.STRING)
     private Status status;
-
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate lastMonthlyMaintenanceFee = LocalDate.now();
 
     public CheckingAccount() {

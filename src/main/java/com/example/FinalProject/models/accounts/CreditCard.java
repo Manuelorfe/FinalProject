@@ -1,6 +1,10 @@
 package com.example.FinalProject.models.accounts;
 
 import com.example.FinalProject.models.users.AccountHolder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -19,7 +23,8 @@ public class CreditCard extends Account{
     @Min(100)
     @Max(100000)
     private BigDecimal creditLimit;
-
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate lastInterestApplied = LocalDate.now();
 
     public CreditCard() {

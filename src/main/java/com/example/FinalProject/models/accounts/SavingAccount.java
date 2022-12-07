@@ -1,6 +1,10 @@
 package com.example.FinalProject.models.accounts;
 
 import com.example.FinalProject.models.users.AccountHolder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,6 +21,8 @@ public class SavingAccount extends Account{
     @NotNull
     private String secretKey;
     @NotNull
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate creationDate;
     @Enumerated(value = EnumType.STRING)
     private Status status;
@@ -26,7 +32,8 @@ public class SavingAccount extends Account{
     @DecimalMax("0.5")
     @Column(columnDefinition = "decimal(38,4)")
     private BigDecimal interestRate;
-
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate lastInterestApplied = LocalDate.now();
 
 

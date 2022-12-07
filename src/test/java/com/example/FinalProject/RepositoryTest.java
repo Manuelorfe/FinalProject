@@ -6,6 +6,7 @@ import com.example.FinalProject.models.users.Address;
 import com.example.FinalProject.models.users.ThirdPartyUser;
 import com.example.FinalProject.repositories.accounts.*;
 import com.example.FinalProject.repositories.users.AccountHolderRepository;
+import com.example.FinalProject.repositories.users.AdminRepository;
 import com.example.FinalProject.repositories.users.ThirdPartyUserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,8 @@ public class RepositoryTest {
 
     @Autowired
     AccountHolderRepository accountHolderRepository;
+    @Autowired
+    AdminRepository adminRepository;
     @Autowired
     ThirdPartyUserRepository thirdPartyUserRepository;
     @Autowired
@@ -78,6 +81,11 @@ public class RepositoryTest {
         assertTrue(accountHolderRepository.findByUsername("User1").isPresent());
         assertEquals("Manuel", accountHolderRepository.findByUsername("User1").get().getName());
 
+    }
+
+    @Test
+    void commandLineRunnerAddAdmin() {
+        assertEquals(1, adminRepository.findAll().size());
     }
 
     @Test

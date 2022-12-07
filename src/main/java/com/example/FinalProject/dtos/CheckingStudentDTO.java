@@ -1,5 +1,9 @@
 package com.example.FinalProject.dtos;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
@@ -18,9 +22,18 @@ public class CheckingStudentDTO {
     private Long secondaryOwnerId;
 
     @NotNull
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate creationDate;
 
     public CheckingStudentDTO() {
+    }
+
+    public CheckingStudentDTO(BigDecimal balance, String secretKey, Long primaryOwnerId,LocalDate creationDate) {
+        this.balance = balance;
+        this.secretKey = secretKey;
+        this.primaryOwnerId = primaryOwnerId;
+        this.creationDate = creationDate;
     }
 
     public CheckingStudentDTO(BigDecimal balance, String secretKey, Long primaryOwnerId, Long secondaryOwnerId, LocalDate creationDate) {

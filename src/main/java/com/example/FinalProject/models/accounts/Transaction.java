@@ -1,5 +1,9 @@
 package com.example.FinalProject.models.accounts;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -19,6 +23,8 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "account_receiver_id")
     private Account accountReceiver;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime transactionDate;
 
     public Transaction() {

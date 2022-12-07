@@ -64,7 +64,8 @@ public class AdminService {
     }
 
     public void removeUserService(Long id) {
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        userRepository.deleteById(user.getId());
     }
 
 
@@ -140,9 +141,6 @@ public class AdminService {
 
             if(creditCard.getBalance().compareTo(BigDecimal.valueOf(100)) == -1){
                 throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "The Balance must be greater than Credit Limit Minimum");
-            }
-            if(creditCard.getBalance().compareTo(creditCard.getCreditLimit()) == 1){
-                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "The Balance must be lower than Credit Limit Maximum");
             }
             return creditCardRepository.save(creditCard);
         }

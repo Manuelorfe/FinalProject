@@ -81,7 +81,7 @@ public class AccountHolderService {
             //Si la cuenta es SavingAccount por cada año que pase le sumo el interestRate.
             if (primaryAccount instanceof SavingAccount) {
                 SavingAccount savingAccount = (SavingAccount) primaryAccount;
-                if (Period.between(savingAccount.getLastInterestApplied(), LocalDate.now()).getYears() >= 1) {
+                if (Period.between(savingAccount.getLastInterestApplied(), LocalDate.now()).getYears() > 1) {
                     newBalanceSavingAccount = savingAccount.getInterestRate().multiply(savingAccount.getBalance())
                             .multiply(BigDecimal.valueOf(Period.between(savingAccount.getLastInterestApplied(), LocalDate.now()).getYears())).add(savingAccount.getBalance());
                     savingAccount.setBalance(newBalanceSavingAccount);
@@ -92,7 +92,7 @@ public class AccountHolderService {
             //Si la cuenta es Credit Card por cada mes que pasa le resto el interestRate
             if (primaryAccount instanceof CreditCard) {
                 CreditCard creditCard = (CreditCard) primaryAccount;
-                if (Period.between(creditCard.getLastInterestApplied(), LocalDate.now()).getMonths() >= 1) {
+                if (Period.between(creditCard.getLastInterestApplied(), LocalDate.now()).getMonths() > 1) {
                     newBalanceCreditCard = creditCard.getBalance().subtract(creditCard.getInterestRate().multiply(creditCard.getBalance())
                             .multiply(BigDecimal.valueOf(Period.between(creditCard.getLastInterestApplied(), LocalDate.now()).getMonths())).divide(BigDecimal.valueOf(12)));
                     creditCard.setBalance(newBalanceCreditCard);
