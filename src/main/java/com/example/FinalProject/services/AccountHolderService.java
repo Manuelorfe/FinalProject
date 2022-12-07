@@ -7,7 +7,6 @@ import com.example.FinalProject.models.users.Role;
 import com.example.FinalProject.repositories.accounts.*;
 import com.example.FinalProject.repositories.users.AccountHolderRepository;
 import com.example.FinalProject.repositories.users.RoleRepository;
-import org.aspectj.weaver.patterns.PerObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,18 +48,27 @@ public class AccountHolderService {
         return accountHolder1;
     }
 
-    public List<Account> getListAccountsService(Long id) {
+    public List<Account> getListAccountsService(String userName) {
         //Recupero el accountHolder de la base de datos y compruebo que existe
-        AccountHolder accountHolder = accountHolderRepository.findById(id)
+        //Lo hacemos con el findByUsername porque le pasamos el nombre y no la id como hacíamos antes para el @AuthenticationPrincipal
+        //De esta manera aunque un Account Holder tenga permiso para entrar a la ruta no podrá ver la lista del usuario cambiando la id, se autenticará con el nombre
+        AccountHolder accountHolder = accountHolderRepository.findByUsername(userName)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "AccountHolder not found"));
 
         //Devuelvo una lista de sus cuentas
         return accountHolder.getPrimaryAccounts();
+
+
+     /* ASi seria sin la @AuthenticationPrincipal pasandole por parametro la ID
+     AccountHolder accountHolder = accountHolderRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "AccountHolder not found"));
+
+        return accountHolder.getPrimaryAccounts();*/
     }
 
-    public BigDecimal getBalance(Long id) {
+    public BigDecimal getBalance(String userName) {
         //Recupero el accountHolder de la base de datos y compruebo que existe
-        AccountHolder accountHolder = accountHolderRepository.findById(id)
+        AccountHolder accountHolder = accountHolderRepository.findByUsername(userName)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "AccountHolder not found"));
 
         BigDecimal balance = new BigDecimal("0.0");
@@ -73,7 +81,7 @@ public class AccountHolderService {
             //Si la cuenta es SavingAccount por cada año que pase le sumo el interestRate.
             if (primaryAccount instanceof SavingAccount) {
                 SavingAccount savingAccount = (SavingAccount) primaryAccount;
-                if (Period.between(savingAccount.getLastInterestApplied(), LocalDate.now()).getYears() > 1) {
+                if (Period.between(savingAccount.getLastInterestApplied(), LocalDate.now()).getYears() >= 1) {
                     newBalanceSavingAccount = savingAccount.getInterestRate().multiply(savingAccount.getBalance())
                             .multiply(BigDecimal.valueOf(Period.between(savingAccount.getLastInterestApplied(), LocalDate.now()).getYears())).add(savingAccount.getBalance());
                     savingAccount.setBalance(newBalanceSavingAccount);
@@ -84,7 +92,7 @@ public class AccountHolderService {
             //Si la cuenta es Credit Card por cada mes que pasa le resto el interestRate
             if (primaryAccount instanceof CreditCard) {
                 CreditCard creditCard = (CreditCard) primaryAccount;
-                if (Period.between(creditCard.getLastInterestApplied(), LocalDate.now()).getMonths() > 1) {
+                if (Period.between(creditCard.getLastInterestApplied(), LocalDate.now()).getMonths() >= 1) {
                     newBalanceCreditCard = creditCard.getBalance().subtract(creditCard.getInterestRate().multiply(creditCard.getBalance())
                             .multiply(BigDecimal.valueOf(Period.between(creditCard.getLastInterestApplied(), LocalDate.now()).getMonths())).divide(BigDecimal.valueOf(12)));
                     creditCard.setBalance(newBalanceCreditCard);

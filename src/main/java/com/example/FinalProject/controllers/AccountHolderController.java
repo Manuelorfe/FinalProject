@@ -3,7 +3,7 @@ package com.example.FinalProject.controllers;
 import com.example.FinalProject.dtos.TransactionDTO;
 import com.example.FinalProject.models.accounts.*;
 import com.example.FinalProject.models.users.AccountHolder;
-import com.example.FinalProject.models.users.User;
+import com.example.FinalProject.security.CustomUserDetails;
 import com.example.FinalProject.services.AccountHolderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,17 +28,18 @@ public class AccountHolderController {
     }
 
 
-    @GetMapping("/my-accounts/{id}")
+    @GetMapping("/my-accounts")
     @ResponseStatus(HttpStatus.OK)
-    public List<Account> getListAccounts(@PathVariable Long id, @AuthenticationPrincipal User user){
-
-        return accountHolderService.getListAccountsService(id);
+    public List<Account> getListAccounts(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        String userName = customUserDetails.getUsername();
+        return accountHolderService.getListAccountsService(userName);
     }
 
-    @GetMapping("/my-balance/{id}")
+    @GetMapping("/my-balance")
     @ResponseStatus(HttpStatus.OK)
-    public BigDecimal getBalance(@PathVariable Long id){
-        return accountHolderService.getBalance(id);
+    public BigDecimal getBalance(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        String userName = customUserDetails.getUsername();
+        return accountHolderService.getBalance(userName);
     }
 
 

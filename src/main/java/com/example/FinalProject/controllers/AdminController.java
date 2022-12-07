@@ -2,18 +2,15 @@ package com.example.FinalProject.controllers;
 
 import com.example.FinalProject.dtos.CheckingStudentDTO;
 import com.example.FinalProject.models.accounts.Account;
-import com.example.FinalProject.models.accounts.CheckingAccount;
 import com.example.FinalProject.models.accounts.CreditCard;
 import com.example.FinalProject.models.accounts.SavingAccount;
 import com.example.FinalProject.models.users.AccountHolder;
 import com.example.FinalProject.models.users.Address;
 import com.example.FinalProject.models.users.ThirdPartyUser;
 import com.example.FinalProject.models.users.User;
-import com.example.FinalProject.security.CustomUserDetails;
 import com.example.FinalProject.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
