@@ -8,6 +8,7 @@ import com.example.FinalProject.repositories.accounts.CheckingAccountRepository;
 import com.example.FinalProject.repositories.accounts.SavingAccountRepository;
 import com.example.FinalProject.repositories.accounts.StudentAccountRepository;
 import com.example.FinalProject.repositories.users.ThirdPartyUserRepository;
+import com.example.FinalProject.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
