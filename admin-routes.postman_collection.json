@@ -1,0 +1,373 @@
+{
+	"info": {
+		"_postman_id": "5d04cc50-e9b8-428e-823b-a57741a83d10",
+		"name": "admin-routes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24560971"
+	},
+	"item": [
+		{
+			"name": "localhost:8081/admin/add-third-party-user",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "AdminUser",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"ThirdPartyUser\",\r\n    \"password\": \"123456\",\r\n    \"name\": \"Manuel Ortega\",\r\n    \"hashedKey\": \"HK0001\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/admin/add-third-party-user",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"admin",
+						"add-third-party-user"
+					]
+				},
+				"description": "Add ThirdParty user"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8081/admin/remove-user/2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "AdminUser",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8081/admin/remove-user/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"admin",
+						"remove-user",
+						"2"
+					]
+				},
+				"description": "Delete User"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8081/admin/add-mailing-adress-ah/2",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"addressName\": \"Mailing Address\",\r\n        \"city\": \"City\",\r\n        \"postalCode\": \"PostalCode\",\r\n        \"country\": \"Spain\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/admin/add-mailing-adress-ah/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"admin",
+						"add-mailing-adress-ah",
+						"2"
+					]
+				},
+				"description": "Patch mailing address"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8081/admin/update-ah/2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "AdminUser",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n     \"password\": \"654321\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/admin/update-ah/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"admin",
+						"update-ah",
+						"2"
+					]
+				},
+				"description": "Update user"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8081/admin/create-bank-account",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "AdminUser",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"balance\": \"1000\",\r\n    \"secretKey\": \"SK0001\",\r\n    \"primaryOwnerId\":2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/admin/create-bank-account",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"admin",
+						"create-bank-account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8081/admin/create-saving-account",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "AdminUser",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"balance\": \"490\",\r\n    \"primaryOwner\":{\r\n        \"id\": \"2\"\r\n    },\r\n    \"secretKey\": \"SKSA0001\",\r\n    \"minimumBalance\" : 450,\r\n    \"interestRate\": 0.02\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/admin/create-saving-account",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"admin",
+						"create-saving-account"
+					]
+				},
+				"description": "Create SavingAccount"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8081/admin/create-credit-card",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "AdminUser",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"balance\": \"4500\",\r\n    \"primaryOwner\":{\r\n        \"id\": \"2\"\r\n    },\r\n    \"interestRate\": 0.15,\r\n    \"creditLimit\":5000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/admin/create-credit-card",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"admin",
+						"create-credit-card"
+					]
+				},
+				"description": "Create Credit Card"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8081/admin/change-balance/1?amount=5000",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "AdminUser",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "localhost:8081/admin/change-balance/1?amount=5000",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"admin",
+						"change-balance",
+						"1"
+					],
+					"query": [
+						{
+							"key": "amount",
+							"value": "5000"
+						}
+					]
+				},
+				"description": "Change balance to an Account"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8081/admin/get-users",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "AdminUser",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8081/admin/get-users",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"admin",
+						"get-users"
+					]
+				},
+				"description": "Get all users"
+			},
+			"response": []
+		}
+	]
+}

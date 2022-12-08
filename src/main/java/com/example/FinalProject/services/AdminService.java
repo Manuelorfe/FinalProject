@@ -93,10 +93,11 @@ public class AdminService {
 
     public AccountHolder updateAccountHolderService(Long id, AccountHolder accountHolder) {
 
+
         if (accountHolderRepository.findById(id).isPresent()) {
             AccountHolder newAccountHolder = accountHolderRepository.findById(id).get();
             if (accountHolder.getUsername() != null) newAccountHolder.setUsername(accountHolder.getUsername());
-            if (accountHolder.getPassword() != null) newAccountHolder.setPassword(accountHolder.getPassword());
+            if (accountHolder.getPassword() != null) newAccountHolder.setPassword(passwordEncoder.encode(accountHolder.getPassword()));
             if (accountHolder.getName() != null) newAccountHolder.setName(accountHolder.getName());
             if (accountHolder.getDateOfBirth() != null) newAccountHolder.setDateOfBirth(accountHolder.getDateOfBirth());
             if (accountHolder.getPrimaryAddress() != null)

@@ -1,0 +1,156 @@
+{
+	"info": {
+		"_postman_id": "e7ac3a80-50a6-4b06-ae1f-b2ce8660fb5a",
+		"name": "accountholder-routes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24560971"
+	},
+	"item": [
+		{
+			"name": "localhost:8081/account-holder/my-accounts/2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "User",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8081/account-holder/my-accounts",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"account-holder",
+						"my-accounts"
+					]
+				},
+				"description": "Get all primary accounts"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8081/account-holder/my-balance/2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "User",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8081/account-holder/my-balance",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"account-holder",
+						"my-balance"
+					]
+				},
+				"description": "Get Balance from all accounts"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8081/account-holder/create-user",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"User\",\r\n    \"password\": \"123456\",\r\n    \"name\": \"Manuel Ortega\",\r\n    \"dateOfBirth\": \"1985-02-17\",\r\n        \"primaryAddress\":{\r\n        \"addressName\": \"Calle 1\",\r\n        \"city\": \"Barcelona\",\r\n        \"postalCode\": \"08019\",\r\n        \"country\": \"España\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/account-holder/create-user",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"account-holder",
+						"create-user"
+					]
+				},
+				"description": "Add AccountHolder user"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8081/account-holder/transference",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "User",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\":500,\r\n    \"accountSenderId\": 1,\r\n    \"name\": \"Nombre\",\r\n    \"accountReceiverId\":2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/account-holder/transference",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"account-holder",
+						"transference"
+					]
+				},
+				"description": "Make a transference"
+			},
+			"response": []
+		}
+	]
+}

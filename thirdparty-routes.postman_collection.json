@@ -1,0 +1,59 @@
+{
+	"info": {
+		"_postman_id": "f49c25dd-ca02-4906-8036-f77696085b89",
+		"name": "thirdparty-routes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24560971"
+	},
+	"item": [
+		{
+			"name": "localhost:8081/third-party/transference",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "ThirdPartyUser",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "hashedKey",
+						"value": "HK0001",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"thirdPartyId\": 3,\r\n    \"amount\": 501,\r\n    \"accountId\": 1,\r\n    \"secretKey\":\"SK0001\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/third-party/transference",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"third-party",
+						"transference"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
