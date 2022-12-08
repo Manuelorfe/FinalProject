@@ -120,12 +120,4 @@ public class SavingAccount extends Account{
         this.lastInterestApplied = lastInterestApplied;
     }
 
-    @Override
-    public void setBalance(BigDecimal balance) {
-
-        if(balance.compareTo(minimumBalance) == -1 ){
-            balance = balance.subtract(super.getPENALTY_FEE());
-        }
-        super.setBalance(balance);
-    }
 }

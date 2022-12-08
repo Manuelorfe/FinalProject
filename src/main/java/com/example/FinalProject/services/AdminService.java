@@ -127,9 +127,10 @@ public class AdminService {
 
         if(accountHolderRepository.findById(savingAccount.getPrimaryOwner().getId()).isPresent()){
 
-            if(savingAccount.getBalance().compareTo(savingAccount.getMinimumBalance()) < 0){
+            if(savingAccount.getBalance().compareTo(savingAccount.getMinimumBalance()) == -1){
                 throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "The Balance must be greater than Minimum Balance");
             }
+            System.err.println(savingAccount.getMinimumBalance());
             return savingAccountRepository.save(savingAccount);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Any USER with that ID");

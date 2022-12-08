@@ -88,14 +88,6 @@ public class CheckingAccount extends Account{
         return MONTHLY_MAINTENANCE_FEE;
     }
 
-    @Override
-    public void setBalance(BigDecimal balance) {
-        if(balance.compareTo(MINIMUM_BALANCE) == -1 ){
-            balance = balance.subtract(super.getPENALTY_FEE());
-        }
-        super.setBalance(balance);
-    }
-
     public LocalDate getLastMonthlyMaintenanceFee() {
         return lastMonthlyMaintenanceFee;
     }

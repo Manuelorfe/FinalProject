@@ -61,6 +61,8 @@ public class AccountHolderTests {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
 
+
+    // Este test no funciona por el AuthenticationPrincipal
     @Test
     public void getMyAccounts() throws Exception {
 

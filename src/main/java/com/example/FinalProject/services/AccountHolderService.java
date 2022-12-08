@@ -59,7 +59,7 @@ public class AccountHolderService {
         return accountHolder.getPrimaryAccounts();
 
 
-     /* ASi seria sin la @AuthenticationPrincipal pasandole por parametro la ID
+     /* Asi sería sin la @AuthenticationPrincipal pasándole por parámetro la ID
      AccountHolder accountHolder = accountHolderRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "AccountHolder not found"));
 
@@ -123,6 +123,8 @@ public class AccountHolderService {
         Account senderAccount = accountRepository.findById(transactionDTO.getAccountSenderId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
 
+
+
         //Que la cuenta tiene fondos
         if (senderAccount.getBalance().compareTo(transactionDTO.getAmount()) < 0)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The account has not enough founds");
@@ -131,13 +133,38 @@ public class AccountHolderService {
         Account receiverAccount = accountRepository.findById(transactionDTO.getAccountReceiverId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
 
-        //Compruebo que no le deje la cuenta en negativo (EN EL CASO DE QUE INTRODUZCA UN SIGNO NEGATIVO DELANTE DE LA CIFRA)
-        if (senderAccount.getBalance().subtract(transactionDTO.getAmount()).compareTo(BigDecimal.ZERO) == -1) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough founds on");
+        //Compruebo que el nombre que pasa sea el mismo que el  del propietario de la cuenta que recibe
+        if(!transactionDTO.getName().equals(receiverAccount.getPrimaryOwner().getName())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The name doesn't match with the owner of the account receiver name ");
         }
 
-        //Le quito el importe a la cuenta que envía y se lo sumo a la cuenta destino
+        //Compruebo que no le deje la cuenta en negativo (EN EL CASO DE QUE INTRODUZCA UN SIGNO NEGATIVO DELANTE DE LA CIFRA)
+        if (senderAccount.getBalance().subtract(transactionDTO.getAmount()).compareTo(BigDecimal.ZERO) == -1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough founds");
+        }
+
+
+
+
+
+        //Le quito el importe a la cuenta que envía
         senderAccount.setBalance(senderAccount.getBalance().subtract(transactionDTO.getAmount()));
+
+        //Compruebo que si baja por debajo del balance minimo le aplique el penalty fee tanto en CheckingAccount como en SavingAccount
+        if(senderAccount instanceof SavingAccount) {
+            SavingAccount savingAccount = (SavingAccount) senderAccount;
+            if (senderAccount.getBalance().compareTo(savingAccount.getMinimumBalance()) == -1){
+                senderAccount.setBalance(senderAccount.getBalance().subtract(senderAccount.getPENALTY_FEE()));
+            }
+        }
+        if(senderAccount instanceof CheckingAccount) {
+            CheckingAccount checkingAccount = (CheckingAccount) senderAccount;
+            if (senderAccount.getBalance().compareTo(checkingAccount.getMINIMUM_BALANCE()) == -1){
+                senderAccount.setBalance(senderAccount.getBalance().subtract(senderAccount.getPENALTY_FEE()));
+            }
+        }
+
+        //Le sumo a la cuenta destino el importe
         receiverAccount.setBalance(receiverAccount.getBalance().add(transactionDTO.getAmount()));
 
         //Guardo el objeto transaction en la BD

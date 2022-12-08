@@ -66,7 +66,10 @@ public class ThirdPartyTest {
         //Convertimos el objeto a formato json
         String body = objectMapper.writeValueAsString(thirdPartyTransactionDTO);
 
-        MvcResult result = mockMvc.perform(post("/third-party/transference").content(body).contentType(MediaType.APPLICATION_JSON))
+        MvcResult result = mockMvc.perform(post("/third-party/transference")
+                        .header("hashedKey", "HK2345")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
         assertTrue(result.getResponse().getContentAsString().contains("SKCHECKING"));
