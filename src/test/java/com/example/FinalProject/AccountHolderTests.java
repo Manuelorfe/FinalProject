@@ -5,10 +5,8 @@ import com.example.FinalProject.models.accounts.CheckingAccount;
 import com.example.FinalProject.models.accounts.SavingAccount;
 import com.example.FinalProject.models.users.AccountHolder;
 import com.example.FinalProject.models.users.Address;
-import com.example.FinalProject.models.users.Admin;
 import com.example.FinalProject.repositories.accounts.CheckingAccountRepository;
 import com.example.FinalProject.repositories.accounts.SavingAccountRepository;
-import com.example.FinalProject.repositories.accounts.TransactionRepository;
 import com.example.FinalProject.repositories.users.AccountHolderRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,23 +14,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -61,24 +53,6 @@ public class AccountHolderTests {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
 
-
-    // Este test no funciona por el AuthenticationPrincipal
-    @Test
-    public void getMyAccounts() throws Exception {
-
-   /*     Address address = new Address("Calle 1", "Barcelona", "08019", "España");
-        AccountHolder accountHolder = accountHolderRepository.save(new AccountHolder("User", "123456", "Manuel", LocalDate.of(1985, 02, 17), address));
-        CheckingAccount checkingAccount = checkingAccountRepository.save(new CheckingAccount(BigDecimal.valueOf(1000), accountHolder, "SKCHECKING"));
-
-        MvcResult result = mockMvc.perform(get("/account-holder/my-accounts").content("User").contentType(MeAuncipal)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk()).andReturn();
-
-        assertTrue(result.getResponse().getContentAsString().contains("SKCHECKING"));*/
-
-    }
-
     @Test
     void shouldAddAccountHolder() throws Exception {
 
@@ -92,6 +66,8 @@ public class AccountHolderTests {
 
         assertTrue(result.getResponse().getContentAsString().contains("Manuel"));
     }
+
+    // IMPORTANTE -------------> Estos 3 test no funciona por el AuthenticationPrincipal
 
     @Test
     void shouldMakeTransaction() throws Exception {
@@ -113,6 +89,28 @@ public class AccountHolderTests {
                 .andExpect(status().isOk()).andReturn();
 
         assertTrue(result.getResponse().getContentAsString().contains("SKSAVING"));
+    }
+
+
+    @Test
+    public void getMyAccounts() throws Exception {
+
+   /*     Address address = new Address("Calle 1", "Barcelona", "08019", "España");
+        AccountHolder accountHolder = accountHolderRepository.save(new AccountHolder("User", "123456", "Manuel", LocalDate.of(1985, 02, 17), address));
+        CheckingAccount checkingAccount = checkingAccountRepository.save(new CheckingAccount(BigDecimal.valueOf(1000), accountHolder, "SKCHECKING"));
+
+        MvcResult result = mockMvc.perform(get("/account-holder/my-accounts").content("User").contentType(MeAuncipal)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk()).andReturn();
+
+        assertTrue(result.getResponse().getContentAsString().contains("SKCHECKING"));*/
+
+    }
+
+    @Test
+    public void getMyBalance() throws Exception {
+
     }
 
 
