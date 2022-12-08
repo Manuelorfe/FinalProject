@@ -4,10 +4,7 @@ import com.example.FinalProject.dtos.CheckingStudentDTO;
 import com.example.FinalProject.models.accounts.Account;
 import com.example.FinalProject.models.accounts.CreditCard;
 import com.example.FinalProject.models.accounts.SavingAccount;
-import com.example.FinalProject.models.users.AccountHolder;
-import com.example.FinalProject.models.users.Address;
-import com.example.FinalProject.models.users.ThirdPartyUser;
-import com.example.FinalProject.models.users.User;
+import com.example.FinalProject.models.users.*;
 import com.example.FinalProject.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +27,13 @@ public class AdminController {
     public ThirdPartyUser addThirdPartyUser(@RequestBody ThirdPartyUser thirdPartyUser){
         return adminService.addThirdPartyUserService(thirdPartyUser);
     }
+
+    @PostMapping("/add-admin")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Admin addAdmin(@RequestBody Admin admin){
+        return adminService.addAdmin(admin);
+    }
+
 
 
     @PatchMapping("/change-balance/{id}")

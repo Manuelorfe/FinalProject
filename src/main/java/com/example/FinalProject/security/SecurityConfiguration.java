@@ -31,6 +31,7 @@ public class SecurityConfiguration {
 
         httpSecurity.authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, "/admin/add-third-party-user").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/admin/add-admin").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH, "/admin/change-balance/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/admin/get-users").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH, "/admin/add-mailing-adress-ah/**").hasRole("ADMIN")

@@ -7,6 +7,7 @@ import com.example.FinalProject.models.users.Role;
 import com.example.FinalProject.repositories.accounts.*;
 import com.example.FinalProject.repositories.users.AccountHolderRepository;
 import com.example.FinalProject.repositories.users.RoleRepository;
+import com.example.FinalProject.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -115,18 +116,33 @@ public class AccountHolderService {
         return balance;
     }
 
-    public Transaction makeTransferenceService(TransactionDTO transactionDTO) {
+    public Transaction makeTransferenceService(TransactionDTO transactionDTO, CustomUserDetails customUserDetails) {
         /*Verificar que la cuenta que envía sea suya y que tenga fondos , quitarle el importe
         Verificar que la cuenta que recibe exista , añadirle el importe*/
 
+        Account senderAccount1 = null;
+
+        AccountHolder sender = accountHolderRepository.findByUsername(customUserDetails.getUsername()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "AccountHolder not found/doesn't match"));
+
+        for(Account a : sender.getPrimaryAccounts()){
+            if(a.getId() == transactionDTO.getAccountSenderId()) senderAccount1 = a;
+        }
+
+        for(Account a : sender.getSecondaryAccounts()){
+            if(a.getId() == transactionDTO.getAccountSenderId()) senderAccount1 = a;
+        }
+
+        if(senderAccount1 == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The account is not found in your list of accounts");
+
+
         //Recupero la cuenta de la BD y compruebo que la cuenta existe
-        Account senderAccount = accountRepository.findById(transactionDTO.getAccountSenderId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
+       /* Account senderAccount = accountRepository.findById(transactionDTO.getAccountSenderId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));*/
 
 
 
         //Que la cuenta tiene fondos
-        if (senderAccount.getBalance().compareTo(transactionDTO.getAmount()) < 0)
+        if (senderAccount1.getBalance().compareTo(transactionDTO.getAmount()) < 0)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The account has not enough founds");
 
         //Recupero la cuenta de la BD y compruebo que la cuenta de destino existe
@@ -139,28 +155,24 @@ public class AccountHolderService {
         }
 
         //Compruebo que no le deje la cuenta en negativo (EN EL CASO DE QUE INTRODUZCA UN SIGNO NEGATIVO DELANTE DE LA CIFRA)
-        if (senderAccount.getBalance().subtract(transactionDTO.getAmount()).compareTo(BigDecimal.ZERO) == -1) {
+        if (senderAccount1.getBalance().subtract(transactionDTO.getAmount()).compareTo(BigDecimal.ZERO) == -1) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough founds");
         }
 
-
-
-
-
         //Le quito el importe a la cuenta que envía
-        senderAccount.setBalance(senderAccount.getBalance().subtract(transactionDTO.getAmount()));
+        senderAccount1.setBalance(senderAccount1.getBalance().subtract(transactionDTO.getAmount()));
 
         //Compruebo que si baja por debajo del balance minimo le aplique el penalty fee tanto en CheckingAccount como en SavingAccount
-        if(senderAccount instanceof SavingAccount) {
-            SavingAccount savingAccount = (SavingAccount) senderAccount;
-            if (senderAccount.getBalance().compareTo(savingAccount.getMinimumBalance()) == -1){
-                senderAccount.setBalance(senderAccount.getBalance().subtract(senderAccount.getPENALTY_FEE()));
+        if(senderAccount1 instanceof SavingAccount) {
+            SavingAccount savingAccount = (SavingAccount) senderAccount1;
+            if (senderAccount1.getBalance().compareTo(savingAccount.getMinimumBalance()) == -1){
+                senderAccount1.setBalance(senderAccount1.getBalance().subtract(senderAccount1.getPENALTY_FEE()));
             }
         }
-        if(senderAccount instanceof CheckingAccount) {
-            CheckingAccount checkingAccount = (CheckingAccount) senderAccount;
-            if (senderAccount.getBalance().compareTo(checkingAccount.getMINIMUM_BALANCE()) == -1){
-                senderAccount.setBalance(senderAccount.getBalance().subtract(senderAccount.getPENALTY_FEE()));
+        if(senderAccount1 instanceof CheckingAccount) {
+            CheckingAccount checkingAccount = (CheckingAccount) senderAccount1;
+            if (senderAccount1.getBalance().compareTo(checkingAccount.getMINIMUM_BALANCE()) == -1){
+                senderAccount1.setBalance(senderAccount1.getBalance().subtract(senderAccount1.getPENALTY_FEE()));
             }
         }
 
@@ -168,10 +180,10 @@ public class AccountHolderService {
         receiverAccount.setBalance(receiverAccount.getBalance().add(transactionDTO.getAmount()));
 
         //Guardo el objeto transaction en la BD
-        Transaction transaction = transactionRepository.save(new Transaction(transactionDTO.getAmount(), senderAccount, transactionDTO.getName(), receiverAccount));
+        Transaction transaction = transactionRepository.save(new Transaction(transactionDTO.getAmount(), senderAccount1, transactionDTO.getName(), receiverAccount));
 
         //Guardo las cuentas con sus nuevos balances
-        accountRepository.save(senderAccount);
+        accountRepository.save(senderAccount1);
         accountRepository.save(receiverAccount);
 
         return transaction;

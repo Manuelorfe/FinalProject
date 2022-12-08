@@ -2,9 +2,11 @@ package com.example.FinalProject.controllers;
 
 import com.example.FinalProject.dtos.ThirdPartyTransactionDTO;
 import com.example.FinalProject.models.accounts.Account;
+import com.example.FinalProject.security.CustomUserDetails;
 import com.example.FinalProject.services.ThirdPartyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

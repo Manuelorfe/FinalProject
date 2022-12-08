@@ -88,18 +88,3 @@ public class ThirdPartyService {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "the transfer could not be made");
     }
 }
-
-/*
-        //Recupero la cuenta de la BD y compruebo que la cuenta existe
-        Account senderReceiver = accountRepository.findById(id)
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
-
-        boolean b = senderReceiver instanceof CheckingAccount;
-        if(senderReceiver instanceof CheckingAccount){
-          CheckingAccount checkingAccount = (CheckingAccount) senderReceiver;
-
-            System.err.println(checkingAccount.getSecretKey());
-        }
-
-        System.err.println(b);
- */

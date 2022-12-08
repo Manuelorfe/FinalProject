@@ -42,10 +42,9 @@ public class AccountHolderController {
         return accountHolderService.getBalance(userName);
     }
 
-
     @PostMapping("/transference")
     @ResponseStatus(HttpStatus.OK)
-    public Transaction makeTransference (@RequestBody TransactionDTO transactionDTO){
-       return accountHolderService.makeTransferenceService(transactionDTO);
+    public Transaction makeTransference (@RequestBody TransactionDTO transactionDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails){
+       return accountHolderService.makeTransferenceService(transactionDTO, customUserDetails);
     }
 }

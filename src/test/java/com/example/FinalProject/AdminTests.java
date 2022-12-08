@@ -76,6 +76,7 @@ public class AdminTests {
         savingAccountRepository.deleteAll();
         creditCardRepository.deleteAll();
         thirdPartyUserRepository.deleteAll();
+        adminRepository.deleteAll();
 
     }
 
@@ -87,6 +88,21 @@ public class AdminTests {
         String body = objectMapper.writeValueAsString(thirdPartyUser);
 
         MvcResult result = mockMvc.perform(post("/admin/add-third-party-user")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated()).andReturn();
+
+        assertTrue(result.getResponse().getContentAsString().contains("Jose"));
+    }
+
+    @Test
+    void shouldAddAdmin() throws Exception {
+
+        Admin admin = new Admin("Admin2", "123456", "Jose");
+        //Convertimos el objeto a formato json
+        String body = objectMapper.writeValueAsString(admin);
+
+        MvcResult result = mockMvc.perform(post("/admin/add-admin")
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated()).andReturn();

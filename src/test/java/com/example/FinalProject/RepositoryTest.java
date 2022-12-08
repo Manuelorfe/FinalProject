@@ -3,6 +3,7 @@ package com.example.FinalProject;
 import com.example.FinalProject.models.accounts.*;
 import com.example.FinalProject.models.users.AccountHolder;
 import com.example.FinalProject.models.users.Address;
+import com.example.FinalProject.models.users.Admin;
 import com.example.FinalProject.models.users.ThirdPartyUser;
 import com.example.FinalProject.repositories.accounts.*;
 import com.example.FinalProject.repositories.users.AccountHolderRepository;
@@ -43,6 +44,7 @@ public class RepositoryTest {
     Address address;
     AccountHolder accountHolder;
     ThirdPartyUser thirdPartyUser;
+    Admin admin;
     CheckingAccount checkingAccount;
     StudentAccount studentAccount;
     SavingAccount savingAccount;
@@ -54,6 +56,7 @@ public class RepositoryTest {
         address = new Address("Calle 1", "Barcelona", "08019", "Spain");
         accountHolder = new AccountHolder("User1", "123456", "Manuel", LocalDate.of(1985, 02, 17), address);
         thirdPartyUser = new ThirdPartyUser("ThirdPartyUser", "1234", "Pepe", "HK0001");
+        admin = new Admin("Admin2","0000", "AdminName");
         checkingAccount = new CheckingAccount(BigDecimal.valueOf(1000), accountHolder, "SKCHECKING");
         studentAccount = new StudentAccount(BigDecimal.valueOf(750), accountHolder, "SKSTUDENT");
         savingAccount = new SavingAccount(BigDecimal.valueOf(2500), accountHolder, "SKSAVING");
@@ -65,6 +68,7 @@ public class RepositoryTest {
     public void clean() {
         accountHolderRepository.deleteAll();
         thirdPartyUserRepository.deleteAll();
+        adminRepository.deleteAll();
         checkingAccountRepository.deleteAll();
         studentAccountRepository.deleteAll();
         savingAccountRepository.deleteAll();
@@ -84,14 +88,15 @@ public class RepositoryTest {
     }
 
     @Test
-    void commandLineRunnerAddAdmin() {
-        assertEquals(1, adminRepository.findAll().size());
-    }
-
-    @Test
     public void shouldStoreThirdPArtyUser() {
         thirdPartyUserRepository.save(thirdPartyUser);
         assertEquals(1, thirdPartyUserRepository.findAll().size());
+    }
+
+    @Test
+    public void shouldStoreAdmin() {
+        adminRepository.save(admin);
+        assertEquals(1, adminRepository.findAll().size());
     }
 
     @Test
