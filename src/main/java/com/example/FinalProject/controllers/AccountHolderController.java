@@ -8,6 +8,7 @@ import com.example.FinalProject.services.AccountHolderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -30,21 +31,21 @@ public class AccountHolderController {
 
     @GetMapping("/my-accounts")
     @ResponseStatus(HttpStatus.OK)
-    public List<Account> getListAccounts(@AuthenticationPrincipal CustomUserDetails customUserDetails){
-        String userName = customUserDetails.getUsername();
+    public List<Account> getListAccounts(@AuthenticationPrincipal UserDetails userDetails){
+        String userName = userDetails.getUsername();
         return accountHolderService.getListAccountsService(userName);
     }
 
     @GetMapping("/my-balance")
     @ResponseStatus(HttpStatus.OK)
-    public BigDecimal getBalance(@AuthenticationPrincipal CustomUserDetails customUserDetails){
-        String userName = customUserDetails.getUsername();
+    public BigDecimal getBalance(@AuthenticationPrincipal UserDetails userDetails){
+        String userName = userDetails.getUsername();
         return accountHolderService.getBalance(userName);
     }
 
     @PostMapping("/transference")
     @ResponseStatus(HttpStatus.OK)
-    public Transaction makeTransference (@RequestBody TransactionDTO transactionDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails){
-       return accountHolderService.makeTransferenceService(transactionDTO, customUserDetails);
+    public Transaction makeTransference (@RequestBody TransactionDTO transactionDTO, @AuthenticationPrincipal UserDetails userDetails){
+       return accountHolderService.makeTransferenceService(transactionDTO, userDetails);
     }
 }

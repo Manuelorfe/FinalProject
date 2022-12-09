@@ -10,6 +10,7 @@ import com.example.FinalProject.repositories.users.RoleRepository;
 import com.example.FinalProject.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -50,6 +51,7 @@ public class AccountHolderService {
     }
 
     public List<Account> getListAccountsService(String userName) {
+        System.err.println(userName);
         //Recupero el accountHolder de la base de datos y compruebo que existe
         //Lo hacemos con el findByUsername porque le pasamos el nombre y no la id como hacíamos antes para el @AuthenticationPrincipal
         //De esta manera aunque un Account Holder tenga permiso para entrar a la ruta no podrá ver la lista del usuario cambiando la id, se autenticará con el nombre
@@ -116,13 +118,13 @@ public class AccountHolderService {
         return balance;
     }
 
-    public Transaction makeTransferenceService(TransactionDTO transactionDTO, CustomUserDetails customUserDetails) {
+    public Transaction makeTransferenceService(TransactionDTO transactionDTO, UserDetails userDetails) {
         /*Verificar que la cuenta que envía sea suya y que tenga fondos , quitarle el importe
         Verificar que la cuenta que recibe exista , añadirle el importe*/
 
         Account senderAccount1 = null;
 
-        AccountHolder sender = accountHolderRepository.findByUsername(customUserDetails.getUsername()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "AccountHolder not found/doesn't match"));
+        AccountHolder sender = accountHolderRepository.findByUsername(userDetails.getUsername()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "AccountHolder not found/doesn't match"));
 
         for(Account a : sender.getPrimaryAccounts()){
             if(a.getId() == transactionDTO.getAccountSenderId()) senderAccount1 = a;
