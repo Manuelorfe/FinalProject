@@ -1,6 +1,6 @@
 # IRONHACK FINAL PROJECT
 
-## BACKEND REST API BANK
+## BACKEND API REST BANK
 
 Proyecto realizado como trabajo de fin de Bootcamp en Ironhack. Consiste en simular el Backend de una "Entidad Bancaria" utilizando el lenguaje de programación Java y el Framework de SpringBoot.
 
